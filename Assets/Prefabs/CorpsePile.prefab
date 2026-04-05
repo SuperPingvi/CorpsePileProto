@@ -107,3 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c41b5fd5de032a4180a1538cd6d8ed8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CorpsePileInteractor
+  debrisCorpseUnit: {fileID: 0}
+  debrisMassThreshold: 5
+  debrisConversionRatio: 0.4
+  debrisScatterRadius: 1.5

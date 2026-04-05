@@ -17,7 +17,7 @@ public class CorpsePile : MonoBehaviour
 
     public event Action<float> OnMassChanged;
     public event Action<PileState> OnStateChanged;
-    
+    public event Action<Vector3, float> OnDestroyed;
     
     private CorpsePileVisual _visual;
 
@@ -25,9 +25,12 @@ public class CorpsePile : MonoBehaviour
     {
         _visual = GetComponent<CorpsePileVisual>();
     }
+    
+    public CorpseUnit CorpseUnit { get; private set; }
 
     public void AddCorpse(CorpseUnit corpseUnit)
     {
+        CorpseUnit = corpseUnit;
         Mass += corpseUnit.mass;
         Debug.Log($"[CorpsePile] Mass is now {Mass} | State: {State}");
         
@@ -67,8 +70,26 @@ public class CorpsePile : MonoBehaviour
 
     public void ReduceMass(float amount)
     {
+        float previousMass = Mass;
         Mass = Mathf.Max(0f, Mass - amount);
+        OnMassChanged?.Invoke(Mass);
+        if (Mass <= 0f)
+            DestroyPile(previousMass);
+        else
+            EvaluateState();
+    }
+    
+    public void AddMass(float amount)
+    {
+        Mass += amount;
         OnMassChanged?.Invoke(Mass);
         EvaluateState();
     }
+    
+    public void DestroyPile(float massAtDeath = 0f)
+    {
+        OnDestroyed?.Invoke(transform.position, massAtDeath);
+        Destroy(gameObject);
+    }
+
 }
